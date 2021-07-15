@@ -1,0 +1,58 @@
+# Phase-1:
+service: sls-canary-sls
+provider:
+  name: aws
+  runtime: nodejs12.x
+  region: ap-south-1
+package:
+  exclude:
+    - 'node_modules/**'
+    - 'yarn.lock'
+    - 'package.json'
+plugins:
+  - serverless-plugin-aws-alerts
+  - serverless-plugin-canary-deployments
+
+
+
+#Phase-2:
+custom:
+  alerts:
+    dashboards: true
+    definitions: 
+      FunctionErrors:
+        namespace: 'AWS/Lambda'
+        metric: Errors
+        threshold: 1
+        statistic: Minimum
+        period: 60
+        evaluationPeriods: 1
+        comparisonOperator: GreaterThanOrEqualToThreshold
+ 
+
+#Phase-3:
+functions:
+  Order:
+    handler: orders.getOrders
+    events:
+      - http:
+          method: GET
+          path: order
+        alarms:
+          - FunctionErrors
+    deploymentSettings:
+      type: Linear10PercentEvery1Minute
+      alias: Live
+      alarms: 
+        - OrderFunctionErrorsAlarm
+  Product:
+    handler: products.getProducts
+    events:
+      - http: get /product
+    alarms:
+      - FunctionErrors
+    deploymentSettings:
+      type: Linear10PercentEvery1Minute
+      alias: Live
+      alarms: 
+        - ProductFunctionErrorsAlarm
