@@ -1,14 +1,15 @@
 # Phase-1:
-service: sls-canary-sls
+service: codedeploy-rollback
 provider:
   name: aws
   runtime: nodejs12.x
   region: ap-south-1
 package:
+  individually: true
   exclude:
-    - 'node_modules/**'
-    - 'yarn.lock'
-    - 'package.json'
+    - './**'
+
+  
 plugins:
   - serverless-plugin-aws-alerts
   - serverless-plugin-canary-deployments
@@ -34,19 +35,24 @@ custom:
 functions:
   Order:
     handler: orders.getOrders
+    package:
+      include:
+        - orders.js
     events:
-      - http:
-          method: GET
-          path: order
-        alarms:
-          - FunctionErrors
+      - http: GET /order
+    alarms:
+      - FunctionErrors
     deploymentSettings:
       type: Linear10PercentEvery1Minute
       alias: Live
       alarms: 
         - OrderFunctionErrorsAlarm
+
   Product:
     handler: products.getProducts
+    package:
+      include:
+        - products.js
     events:
       - http: get /product
     alarms:
@@ -56,3 +62,22 @@ functions:
       alias: Live
       alarms: 
         - ProductFunctionErrorsAlarm
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

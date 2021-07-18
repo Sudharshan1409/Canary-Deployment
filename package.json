@@ -1,16 +1,18 @@
 {
   "dependencies": {
+    "aws-sdk": "^2.946.0",
+    "chai": "^4.3.4",
+    "mocha": "^9.0.2",
     "nodemon": "^2.0.7",
-    "serverless-plugin-aws-alerts": "1.6.0",
-    "serverless-plugin-canary-deployments": "^0.6.0"
+    "serverless-plugin-aws-alerts": "1.6.1",
+    "serverless-plugin-canary-deployments": "0.6.0"
   },
   "name": "lambda_codedeploy_rollback",
   "version": "1.0.0",
   "main": "index.js",
   "devDependencies": {},
   "scripts": {
-    "start": "nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon index.js"
   },
   "author": "",
   "license": "ISC",
