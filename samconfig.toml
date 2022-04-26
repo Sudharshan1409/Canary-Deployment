@@ -6,7 +6,6 @@ stack_name = "canary-deploy-sam"
 s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-kk4t95qj4uvl"
 s3_prefix = "canary-deploy-sam"
 region = "us-east-1"
-profile = "personal"
 confirm_changeset = true
 capabilities = "CAPABILITY_IAM"
 disable_rollback = false
