@@ -12,12 +12,12 @@ jobs:
     - uses: actions/setup-node@v1
       with:
         node-version: '14.x'
-    - run: for d in */ ; do cd $d && npm install --no-package-lock --loglevel=error && cd .. ; done
+    - run: npm install
     - uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.REGION }}
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.REGION }}
     - run: sam build --use-container
       # Prevent prompts and failure when the stack is unchanged
     - run: sam deploy --no-confirm-changeset --no-fail-on-empty-changeset
