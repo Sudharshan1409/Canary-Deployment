@@ -2,10 +2,10 @@ version = 0.1
 [default]
 [default.deploy]
 [default.deploy.parameters]
-stack_name = "canary-deploy-sam-v2"
-s3_bucket = "hooksbucket"
-s3_prefix = "canary-deploy-sam-v2"
-region = "ap-south-1"
+stack_name = "canary-deploy-sam"
+s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-kk4t95qj4uvl"
+s3_prefix = "canary-deploy-sam"
+region = "us-east-1"
 profile = "personal"
 confirm_changeset = true
 capabilities = "CAPABILITY_IAM"
