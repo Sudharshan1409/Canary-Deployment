@@ -13,11 +13,11 @@ jobs:
       with:
         node-version: '14.x'
     - run: for d in */ ; do cd $d && npm install --no-package-lock --loglevel=error && cd .. ; done
-    - uses: r0zar/sam-deploy-action@v1.4
-      env:
-        TEMPLATE: 'template.yaml'
-        AWS_STACK_NAME: prod-${{ github.actor }}-resourceful
-        AWS_REGION: ${{ secrets.REGION }}
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        AWS_DEPLOY_BUCKET: ${{ secrets.AWS_DEPLOY_BUCKET }}
+    - uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.REGION }}
+    - run: sam build --use-container
+      # Prevent prompts and failure when the stack is unchanged
+    - run: sam deploy --no-confirm-changeset --no-fail-on-empty-changeset
