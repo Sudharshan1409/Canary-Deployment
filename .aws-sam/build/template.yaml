@@ -1,0 +1,49 @@
+AWSTemplateFormatVersion: 2010-09-09
+Transform:
+- AWS::Serverless-2016-10-31
+Resources:
+  MyLambdaFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: OrderFn
+      Handler: order.handler
+      Runtime: nodejs12.x
+      CodeUri: MyLambdaFunction
+      AutoPublishAlias: live
+      DeploymentPreference:
+        Type: Linear10PercentEvery1Minute
+        Alarms:
+        - Ref: CloudWatchAlarm
+        Hooks:
+          PreTraffic:
+            Ref: HooksLambda
+    Metadata:
+      SamResourceId: MyLambdaFunction
+  HooksLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: hooks.pre
+      Runtime: nodejs12.x
+      CodeUri: HooksLambda
+      Policies:
+      - AWSLambdaExecute
+      - Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action: '*'
+          Resource: '*'
+    Metadata:
+      SamResourceId: HooksLambda
+  CloudWatchAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      ActionsEnabled: true
+      AlarmName: lambda-cloudwatch-alarm
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      EvaluationPeriods: 1
+      MetricName: Errors
+      Namespace: AWS/Lambda
+      Statistic: Minimum
+      Threshold: 1
+      DatapointsToAlarm: 1
+      Period: 60
